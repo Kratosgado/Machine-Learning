@@ -68,7 +68,7 @@ cat_encoder.categories_
 # 
 
 # %%
-# %matplotlib inline
+# %matplotlib inline  # only in a Jupyter notebook
 import matplotlib.pyplot as plt 
 
 car_sales.hist(bins=50, figsize=(20,15))
@@ -88,6 +88,13 @@ corr_matrix["price"].sort_values(ascending=False)
 from pandas.plotting import scatter_matrix
 
 num_attribs = [ "sales", "price", "engine_s", "horsepow", "wheelbas", "width", "length", "curb_wgt", "fuel_cap", "mpg"]
+scatter_matrix(car_sales[num_attribs], figsize=(12, 8))
+
+# %% [markdown]
+# ## Remove features with low correlation with price
+
+# %%
+num_attribs = [ "price", "engine_s", "horsepow", "curb_wgt",]
 scatter_matrix(car_sales[num_attribs], figsize=(12, 8))
 
 # %% [markdown]
@@ -121,7 +128,7 @@ car_sales_num_tr = num_pipeline.fit_transform(car_sales_num)
 # using sklearn-learn ColumnTransformer
 from sklearn.compose import ColumnTransformer
 
-num_attribs = [ "sales", "engine_s", "horsepow", "wheelbas", "width", "length", "curb_wgt", "fuel_cap", "mpg"]
+num_attribs = ["engine_s", "horsepow", "curb_wgt"]
 cat_attribs = ['manufact', 'model']
 
 full_pipeline = ColumnTransformer([
@@ -266,6 +273,11 @@ final_rmse = np.sqrt(final_mse)
 final_rmse
 
 # %%
+from scipy import stats
+
+confidence = 0.95
+squared_errors = (final_predictions - y_test) ** 2
+np.sqrt(stats.t.interval(confidence, len(squared_errors) - 1, loc=squared_errors.mean(), scale=stats.sem(squared_errors)))
 
 
 
